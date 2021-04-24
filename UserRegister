@@ -1,0 +1,44 @@
+package xiangmu.example01;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Scanner;
+
+/*
+ * 创建用户注册类
+ */
+public class UserRegister {
+	public static HashSet<User> USER_DATA=new HashSet<User>(); //储存用户数据
+	public static void main(String[] args) {
+		//初始化人员信息
+		initData();
+		//注册新用户，填写注册信息
+		Scanner scanner=new Scanner(System.in);
+		System.out.print("请输入用户名：");
+		String name=scanner.nextLine(); //获取用户名
+		System.out.print("请输入密码：");
+		String mima=scanner.nextLine(); //获取密码
+		System.out.print("请再次输入密码：");
+		String remima=scanner.nextLine(); //获取重复密码
+		System.out.print("出生日期：");
+		String shengri=scanner.nextLine(); //获取出生日期
+		System.out.print("手机号码：");
+		String shoujihaoma=scanner.nextLine(); //获取手机号码
+		System.out.print("电子邮箱：");
+		String youxiang=scanner.nextLine(); //获取电子邮箱
+		//校验用户信息，返回注册状态信息
+		CheckInfo checkInfo=new CheckInfo(USER_DATA);
+		String result=checkInfo.checkAction(name,mima,remima,shengri,shoujihaoma,youxiang);
+		System.out.println("注册结果"+result);
+		System.out.println(USER_DATA.toString());
+	}
+	//初始化数据，创建两个已存在的用户信息并添加至集合
+	private static void initData() {
+		//创建两个User对象，添加到集合中
+		User user=new User("张正","zz,123",new Date(),"18856215963","zhangzheng@itcast.cn");
+		User user1=new User("周琦","zq,123",new Date(),"19156852319","zhangqi@itcast.cn");
+		USER_DATA.add(user);
+		USER_DATA.add(user1);
+		
+	}
+}
