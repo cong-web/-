@@ -1,0 +1,86 @@
+package xiangmu.example01;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+
+public class CheckInfo {
+	public static HashSet<User> USER_DATA=new HashSet<User>(); //用户数据
+	//构造方法
+	public CheckInfo(HashSet<User> USER_DATA) {
+		this.USER_DATA=USER_DATA;
+	}
+	//校验用户信息，返回注册状态信息
+	public String checkAction(String name,String mima,String remima,String shengri,String shoujihaoma,String youxiang) {
+		//状态      1、代表成功    2、代表失败
+		int state =1;
+		//创建字符串缓冲区，记录返回的注册结果内容的字符串
+		StringBuilder result=new StringBuilder();
+		
+	//第一步，验证用户输入的注册信息
+		
+		//密码判断
+		if(!mima.equals(remima)) { //判断密码和重复密码是否相同
+			result.append("两次输入的密码不一致！ \r\n");
+			state=2; //修改状态为注册失败
+		}
+		//生日判断
+		if(shengri.length()!=10) { //字符串长度不为10，则认定格式错误
+			result.append("生日格式不正确！ \r\n");
+			state=2; //修改状态为注册失败
+		}else {
+			for(int i=0;i<shengri.length();i++) {
+				//char   thisChar   =shenri.charAt(i);
+				Character thisChar=shengri.charAt(i);
+				if (i==4 || i==7) {
+					if(!(thisChar=='-')) { //验证第四位和第七位是否是符号“-”
+						result.append("生日格式不正确  \r\n");
+						state=2; //修改状态为注册失败
+						
+					}
+				}else { //验证除了第四位和第七位的字符是否是 0~9 的数字
+                    if(!(Character.isDigit(thisChar))) { //调用 isDigit()方法必须使用包装类，所以不使用 char 类型
+                        result.append("生日格式不正确！ \r\n");
+                        state = 2; //修改状态为注册失败
+                    }
+				}
+			}
+		}
+		//手机号码判断
+		if(shoujihaoma.length()!=11) { //判断手机好长度不等于11位则认为此手机号无效
+			result.append("手机号码不正确！ \r\n");
+			state=2; //修改状态为注册失败
+		}
+		//邮箱判断
+		if(!youxiang.contains("@")) { //判断邮箱地址，默认不带@符号的邮箱认为无效邮箱
+			result.append("邮箱不正确！ \r\n");
+			state=2; //修改状态为注册失败
+		}
+		//如果以上信息校验无误，则将添加新用户加入到集合
+		
+	//第二步，验证新用户在已有用户中是否存在
+		
+        if (state == 1) {
+            //把日期字符串解析成日期对象。//格式化日期返回 Date 对象
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd"); //定义日期
+            Date dateshengri = null;
+            try {
+                dateshengri = format.parse(shengri); //调用 parse()方法解析日期存入 dateBirthday
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            //将新用户添加到列表中，同时可根据 HashSet 判断出用户名有没有重复
+            User newUser = new User(name,mima,dateshengri,shoujihaoma,youxiang);
+            if (USER_DATA.add(newUser)) {
+                result.append("注册成功！");
+            }else {
+                result.append("用户重复！"); //在 HashSet 集合中，无法添加重复元素
+                state = 2; //修改状态为注册失败
+            }
+        }
+        return result.toString();
+    }
+}
