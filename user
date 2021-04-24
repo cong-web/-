@@ -1,0 +1,46 @@
+package xiangmu.example01;
+
+import java.util.Date;
+
+/*
+ * 创建用户类，重写HashCode()和equals()方法
+ */
+public class User {
+	private String name;
+	private String mima;
+	private Date shengri;
+	private String shoujihaoma;
+	private String youxiang;
+//构造空参方法
+public User() {
+	
+}
+public User(String name,String mima,Date shengri,String shoujihaoma,String youxiang) {
+	this.name=name;
+	this.mima=mima;
+	this.shengri=shengri;
+	this.shoujihaoma=shoujihaoma;
+	this.youxiang=youxiang;
+}
+//重写hashcode和equals方法
+@Override
+public int hashCode() {
+	return name.hashCode(); //重写hashcode（）方法，以用户名作为是重复的判断依据
+}
+@Override
+public boolean equals(Object obj) {
+    if (this == obj) //判断是否为同一个对象
+        return true; //如果是同一个对象，直接返回 true
+    if (obj == null)  //判断这个对象是否为空
+        return false; //如果对象是空的，直接返回 false
+    if (getClass() != obj.getClass()) //判断这个对象是否是 User 类型
+        return false; //如果不是，直接返回 false
+    User other = (User) obj; //传入的 object 原是 User 对象，传入时自动向上转型为 Object 类，equals 方法中需要比较 User 中的属性内容，即 User 的对象里的内容，所以要再强转回来
+    if (name == null) { //判断集合中已有的用户名是否为空（是否已有数据存入）
+        if (other.name != null)  //判断 obj 对象中的用户名是否为空
+            return false; //集合中用户名为空且对象中用户名不为空，则返回 false
+    } else if (!name.equals(other.name)) //判断用户名是否相同
+        return false; //如果不同，则返回 false
+    return true; //说明用户名相同，返回 true
+}
+}
